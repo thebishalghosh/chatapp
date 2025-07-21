@@ -1,0 +1,117 @@
+body, .card, .card-body, .card-title, .alert, .alert-info, .text-muted {
+  color: #f4f4f6 !important;
+}
+
+p, .form-label, label {
+  color: #a3bffa !important;
+}
+
+body { background: linear-gradient(135deg, #232946 0%, #121629 100%); color: #f4f4f6; font-family: 'Inter', sans-serif; }
+
+.chat-card {
+  background: #181c2f;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px rgba(35,41,70,0.18);
+  padding: 2rem 1.2rem 1.2rem 1.2rem;
+  margin-bottom: 2rem;
+  border: none;
+}
+
+.chat-box {
+  height: 400px;
+  overflow-y: auto;
+  background: #232946;
+  border-radius: 1rem;
+  border: 1px solid #232946;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  font-size: 1.08rem;
+  color: #f4f4f6;
+  box-shadow: 0 2px 8px rgba(35,41,70,0.10);
+  transition: background 0.3s;
+}
+
+@media (max-width: 600px) {
+  .chat-box { height: 300px; padding: 0.7rem; }
+  .chat-card { padding: 1.2rem 0.5rem 0.7rem 0.5rem; }
+}
+
+.message {
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: flex-end;
+  transition: background 0.2s;
+}
+
+.message .username {
+  font-weight: 600;
+  color: #a3bffa;
+  margin-right: 0.5rem;
+  font-size: 1.05em;
+}
+
+.message .bubble {
+  background: linear-gradient(90deg, #3e4a89 60%, #232946 100%);
+  border-radius: 1.2rem 1.2rem 1.2rem 0.4rem;
+  padding: 0.6rem 1.2rem;
+  display: inline-block;
+  max-width: 80%;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(35,41,70,0.10);
+  font-size: 1.05em;
+  transition: background 0.3s;
+}
+
+.message.self .bubble {
+  background: linear-gradient(90deg, #a3bffa 60%, #6c63ff 100%);
+  color: #232946;
+  border-radius: 1.2rem 1.2rem 0.4rem 1.2rem;
+  margin-left: auto;
+}
+
+.message .text-muted {
+  margin-left: 0.5rem;
+  font-size: 0.85em;
+  color: #b0b3c7 !important;
+}
+
+#message-input {
+  border-radius: 2rem;
+  padding-left: 1rem;
+  background: #232946;
+  color: #fff;
+  border: 1px solid #3e4a89;
+  transition: border 0.2s;
+}
+#message-input:focus {
+  border: 1.5px solid #a3bffa;
+  background: #232946;
+  color: #fff;
+}
+
+.btn-success {
+  border-radius: 2rem;
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(90deg, #6c63ff 60%, #a3bffa 100%);
+  border: none;
+  color: #232946;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-success:hover {
+  background: linear-gradient(90deg, #a3bffa 60%, #6c63ff 100%);
+  color: #fff;
+}
+
+.card-title {
+  color: #a3bffa;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.alert-info {
+  background: #232946;
+  color: #a3bffa;
+  border: none;
+  border-radius: 0.7rem;
+} 

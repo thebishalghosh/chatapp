@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card chat-card">
+  <div class="card-body">
+    <h3 class="card-title text-center mb-3">Chat Room</h3>
+    <div class="chat-box mb-2" id="chat-box"></div>
+    <form id="message-form" autocomplete="off">
+      <div class="input-group">
+        <input type="text" class="form-control" id="message-input" placeholder="Type your message..." required autocomplete="off">
+        <button class="btn btn-success" type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script>
+const socket = io();
+const box = document.getElementById('chat-box');
+const currentUser = "{{ session.get('username', '')|e }}";
+
+function addMessage(msg) {
+  const div = document.createElement('div');
+  div.className = 'message' + (msg.username === currentUser ? ' self' : '');
+  div.innerHTML = `<span class='username'>${msg.username}</span> <span class='bubble'>${msg.content}</span> <span class='text-muted'>${new Date(msg.timestamp).toLocaleTimeString()}</span>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+socket.emit('fetch_messages');
+socket.on('all_messages', function(messages) {
+  box.innerHTML = '';
+  messages.forEach(addMessage);
+});
+
+socket.on('receive_message', function(msg) {
+  addMessage(msg);
+});
+
+document.getElementById('message-form').onsubmit = function(e) {
+  e.preventDefault();
+  const input = document.getElementById('message-input');
+  if (input.value.trim() !== '') {
+    socket.emit('send_message', {content: input.value});
+    input.value = '';
+  }
+};
+</script>
+{% endblock %} 

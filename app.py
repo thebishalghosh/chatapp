@@ -103,5 +103,8 @@ def handle_fetch_messages():
         } for m in messages
     ])
 
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
     socketio.run(app, debug=True) 

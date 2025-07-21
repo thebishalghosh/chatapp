@@ -1,48 +1,95 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="card chat-card">
-  <div class="card-body">
-    <h3 class="card-title text-center mb-3">Chat Room</h3>
-    <div class="chat-box mb-2" id="chat-box"></div>
-    <form id="message-form" autocomplete="off">
-      <div class="input-group">
-        <input type="text" class="form-control" id="message-input" placeholder="Type your message..." required autocomplete="off">
-        <button class="btn btn-success" type="submit">Send</button>
+<div class="row" style="height: 70vh; min-height: 400px;">
+  <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0">
+    <div class="card chat-card h-100 p-0">
+      <div class="card-body p-2">
+        <h5 class="mb-3" style="color:#a3bffa;">Users</h5>
+        <ul class="list-group list-group-flush" id="user-list" style="overflow-y:auto; max-height:55vh;"></ul>
       </div>
-    </form>
+    </div>
+  </div>
+  <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
+    <div class="card chat-card flex-grow-1 d-flex flex-column p-0">
+      <div class="card-body p-2 d-flex flex-column" style="height:100%;">
+        <div id="chat-header" class="mb-2" style="color:#a3bffa; font-weight:600;"></div>
+        <div class="chat-box flex-grow-1 mb-2" id="chat-box" style="min-height:200px;"></div>
+        <form id="message-form" class="mt-auto" autocomplete="off" style="display:none;">
+          <div class="input-group">
+            <input type="text" class="form-control" id="message-input" placeholder="Type your message..." required autocomplete="off">
+            <button class="btn btn-success" type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <script>
 const socket = io();
 const box = document.getElementById('chat-box');
-const currentUser = "{{ session.get('username', '')|e }}";
+const userList = document.getElementById('user-list');
+const chatHeader = document.getElementById('chat-header');
+const messageForm = document.getElementById('message-form');
+const messageInput = document.getElementById('message-input');
+let currentUser = "{{ session.get('username', '')|e }}";
+let currentUserId = {{ session.get('user_id', 0) }};
+let selectedUser = null;
+let selectedUserId = null;
+
+function fetchUsers() {
+  fetch('/users').then(r => r.json()).then(users => {
+    userList.innerHTML = '';
+    users.forEach(u => {
+      const li = document.createElement('li');
+      li.className = 'list-group-item list-group-item-action d-flex align-items-center';
+      li.style.cursor = 'pointer';
+      li.innerHTML = `<span class='avatar me-2' style='background:#a3bffa;color:#232946;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-weight:600;'>${u.username[0].toUpperCase()}</span> <span>${u.username}</span>`;
+      li.onclick = () => selectUser(u);
+      userList.appendChild(li);
+    });
+  });
+}
+
+function selectUser(u) {
+  selectedUser = u.username;
+  selectedUserId = u.id;
+  chatHeader.textContent = `Chat with ${selectedUser}`;
+  messageForm.style.display = '';
+  box.innerHTML = '';
+  socket.emit('join_chat', {other_user_id: selectedUserId});
+  fetch(`/messages/${selectedUserId}`).then(r => r.json()).then(messages => {
+    box.innerHTML = '';
+    messages.forEach(addMessage);
+    box.scrollTop = box.scrollHeight;
+  });
+}
 
 function addMessage(msg) {
   const div = document.createElement('div');
-  div.className = 'message' + (msg.username === currentUser ? ' self' : '');
+  div.className = 'message' + (msg.from_self ? ' self' : '');
   div.innerHTML = `<span class='username'>${msg.username}</span> <span class='bubble'>${msg.content}</span> <span class='text-muted'>${new Date(msg.timestamp).toLocaleTimeString()}</span>`;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
 
-socket.emit('fetch_messages');
-socket.on('all_messages', function(messages) {
-  box.innerHTML = '';
-  messages.forEach(addMessage);
-});
-
 socket.on('receive_message', function(msg) {
-  addMessage(msg);
+  if (selectedUser && (msg.username === selectedUser || msg.from_self)) {
+    addMessage(msg);
+  }
 });
 
-document.getElementById('message-form').onsubmit = function(e) {
+messageForm.onsubmit = function(e) {
   e.preventDefault();
-  const input = document.getElementById('message-input');
-  if (input.value.trim() !== '') {
-    socket.emit('send_message', {content: input.value});
-    input.value = '';
+  if (!selectedUserId) return;
+  const content = messageInput.value.trim();
+  if (content) {
+    socket.emit('send_message', {content, recipient_id: selectedUserId});
+    addMessage({username: currentUser, content, timestamp: new Date().toISOString(), from_self: true});
+    messageInput.value = '';
   }
 };
+
+fetchUsers();
 </script>
 {% endblock %} 

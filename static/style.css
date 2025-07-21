@@ -6,8 +6,41 @@ p, .form-label, label {
   color: #a3bffa !important;
 }
 
-body { background: linear-gradient(135deg, #232946 0%, #121629 100%); color: #f4f4f6; font-family: 'Inter', sans-serif; }
+/* Sidebar styles */
+#user-list {
+  background: #20243a;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(35,41,70,0.10);
+  padding: 0.5rem 0;
+}
+#user-list .list-group-item {
+  background: transparent;
+  color: #f4f4f6;
+  border: none;
+  border-radius: 0.7rem;
+  margin-bottom: 0.2rem;
+  transition: background 0.2s, color 0.2s;
+}
+#user-list .list-group-item:hover, #user-list .list-group-item.active {
+  background: #a3bffa;
+  color: #232946;
+}
+#user-list .avatar {
+  background: #a3bffa;
+  color: #232946;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.1em;
+  margin-right: 0.5rem;
+  box-shadow: 0 1px 4px rgba(35,41,70,0.10);
+}
 
+/* Chat area styles */
 .chat-card {
   background: #181c2f;
   border-radius: 1.2rem;
@@ -30,7 +63,6 @@ body { background: linear-gradient(135deg, #232946 0%, #121629 100%); color: #f4
   box-shadow: 0 2px 8px rgba(35,41,70,0.10);
   transition: background 0.3s;
 }
-
 @media (max-width: 600px) {
   .chat-box { height: 300px; padding: 0.7rem; }
   .chat-card { padding: 1.2rem 0.5rem 0.7rem 0.5rem; }
@@ -42,14 +74,12 @@ body { background: linear-gradient(135deg, #232946 0%, #121629 100%); color: #f4
   align-items: flex-end;
   transition: background 0.2s;
 }
-
 .message .username {
   font-weight: 600;
   color: #a3bffa;
   margin-right: 0.5rem;
   font-size: 1.05em;
 }
-
 .message .bubble {
   background: linear-gradient(90deg, #3e4a89 60%, #232946 100%);
   border-radius: 1.2rem 1.2rem 1.2rem 0.4rem;
@@ -61,14 +91,12 @@ body { background: linear-gradient(135deg, #232946 0%, #121629 100%); color: #f4
   font-size: 1.05em;
   transition: background 0.3s;
 }
-
 .message.self .bubble {
   background: linear-gradient(90deg, #a3bffa 60%, #6c63ff 100%);
   color: #232946;
   border-radius: 1.2rem 1.2rem 0.4rem 1.2rem;
   margin-left: auto;
 }
-
 .message .text-muted {
   margin-left: 0.5rem;
   font-size: 0.85em;

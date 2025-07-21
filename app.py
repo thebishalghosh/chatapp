@@ -21,7 +21,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.Text, nullable=False)
-    messages = db.relationship('Message', backref='user', lazy=True)
+    messages = db.relationship('Message', backref='user', lazy=True, foreign_keys='Message.user_id')
+    received_messages = db.relationship('Message', backref='recipient', lazy=True, foreign_keys='Message.recipient_id')
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
